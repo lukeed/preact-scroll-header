@@ -1,0 +1,30 @@
+{
+  "name": "preact-scroll-header",
+  "version": "0.0.0",
+  "module": "src/index.js",
+  "main": "dist/preact-scroll-header.js",
+  "repository": "lukeed/preact-scroll-header",
+  "description": "...",
+  "license": "MIT",
+  "files": [
+    "src",
+    "dist"
+  ],
+  "author": {
+    "name": "Luke Edwards",
+    "email": "luke.edwards05@gmail.com",
+    "url": "https://lukeed.com"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "postbuild": "uglifyjs dist/preact-scroll-header.js -c -m -o dist/preact-scroll-header.min.js"
+  },
+  "devDependencies": {
+    "rollup": "^0.41.4",
+    "rollup-plugin-buble": "^0.15.0",
+    "uglify-js": "^2.7.5"
+  },
+  "peerDependencies": {
+    "preact": "^7.2.0"
+  }
+}
