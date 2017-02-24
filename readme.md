@@ -1,6 +1,6 @@
 # preact-scroll-header [![NPM](https://img.shields.io/npm/v/preact-scroll-header.svg)](https://www.npmjs.com/package/preact-scroll-header)
 
-> ...; for :atom_symbol: [Preact](https://github.com/developit/preact)
+> A (800b gzip) header that will show/hide while scrolling; for :atom_symbol: [Preact](https://github.com/developit/preact)
 
 #### [Demo](https://jsfiddle.net/lukeed/kws8r5v4/)
 

@@ -4,7 +4,7 @@
   "module": "src/index.js",
   "main": "dist/preact-scroll-header.js",
   "repository": "lukeed/preact-scroll-header",
-  "description": "...",
+  "description": "A (800b gzip) header that will show/hide while scrolling",
   "license": "MIT",
   "files": [
     "src",
