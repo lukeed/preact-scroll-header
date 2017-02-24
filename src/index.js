@@ -9,6 +9,8 @@ function attach(el, cb) {
 	(el === body ? doc : el).addEventListener(EVT, cb);
 }
 
+function noop() {}
+
 export default class ScrollHeader extends Component {
 	constructor(props) {
 		super(props);
@@ -78,7 +80,9 @@ export default class ScrollHeader extends Component {
 		// delay `isReady` application; transition flashing
 		(state.isFixed !== now) && setTimeout(() => this.setState({ isReady: now }), 1);
 		// call user callbacks if `shown` state changed
-		if (state.isShown !== this.state.isShown) return (isShown ? props.onShow : props.onHide).call(this, this.base);
+		if (state.isShown !== this.state.isShown) {
+			((isShown ? props.onShow : props.onHide) || noop).call(this, this.base);
+		}
 	}
 
 	render(props, state) {
