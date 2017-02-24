@@ -76,12 +76,13 @@ export default class ScrollHeader extends Component {
 	}
 
 	componentDidUpdate(props, state) {
-		const now = this.state.isFixed;
+		const fix = this.state.isFixed;
+		const now = this.state.isShown;
 		// delay `isReady` application; transition flashing
-		(state.isFixed !== now) && setTimeout(() => this.setState({ isReady: now }), 1);
+		(state.isFixed !== fix) && setTimeout(() => this.setState({ isReady: fix }), 1);
 		// call user callbacks if `shown` state changed
-		if (state.isShown !== this.state.isShown) {
-			((isShown ? props.onShow : props.onHide) || noop).call(this, this.base);
+		if (state.isShown !== now) {
+			((now ? props.onShow : props.onHide) || noop).call(this, this.base);
 		}
 	}
 

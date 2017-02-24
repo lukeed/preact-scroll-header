@@ -89,12 +89,13 @@ var ScrollHeader = (function (Component$$1) {
 	ScrollHeader.prototype.componentDidUpdate = function componentDidUpdate (props, state) {
 		var this$1 = this;
 
-		var now = this.state.isFixed;
+		var fix = this.state.isFixed;
+		var now = this.state.isShown;
 		// delay `isReady` application; transition flashing
-		(state.isFixed !== now) && setTimeout(function () { return this$1.setState({ isReady: now }); }, 1);
+		(state.isFixed !== fix) && setTimeout(function () { return this$1.setState({ isReady: fix }); }, 1);
 		// call user callbacks if `shown` state changed
-		if (state.isShown !== this.state.isShown) {
-			((isShown ? props.onShow : props.onHide) || noop).call(this, this.base);
+		if (state.isShown !== now) {
+			((now ? props.onShow : props.onHide) || noop).call(this, this.base);
 		}
 	};
 
