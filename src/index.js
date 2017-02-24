@@ -1,7 +1,8 @@
 import { h, Component } from 'preact';
 
 const EVT = 'scroll';
-const body = document.body;
+const doc = document;
+const body = doc.body;
 let lastScroll, firstReverse;
 
 export default class ScrollHeader extends Component {
@@ -46,20 +47,25 @@ export default class ScrollHeader extends Component {
 	}
 
 	componentDidMount() {
+		let el = this.parent;
 		this.height = this.base.offsetHeight;
-		!this.parent && (this.parent = this.base.parentNode);
+		!el && (this.parent = el = this.base.parentNode);
 		if (!this.props.disabled) {
-			addEventListener(EVT, this.onScroll);
-			// this.parent.addEventListener(EVT, this.onScroll);
+			(el === body ? doc : el).addEventListener(EVT, this.onScroll);
 		}
 	}
 
-	componentWillReceiveProps({ disabled }) {
+	componentWillReceiveProps(props) {
+		const el = this.parent;
 		const prev = this.props.disabled;
-		// is newly disabled, "unfix"
-		(!prev && disabled) && this.parent.removeEventListener(EVT, this.onScroll);
+		// is newly disabled
+		if (!prev && props.disabled) {
+			(el === body ? doc : el).removeEventListener(EVT, this.onScroll);
+		}
 		// is newly enabled
-		(prev && !disabled) && this.parent.addEventListener(EVT, this.onScroll)
+		if (prev && !props.disabled) {
+			(el === doc.body ? doc : el).addEventListener(EVT, this.onScroll);
+		}
 	}
 
 	shouldComponentUpdate(props, state) {
@@ -70,12 +76,12 @@ export default class ScrollHeader extends Component {
 			|| state.isShown !== now.isShown;
 	}
 
-	componentDidUpdate({ onShow, onHide }, { isFixed, isShown }) {
+	componentDidUpdate(props, state) {
 		const now = this.state.isFixed;
 		// delay `isReady` application; transition flashing
-		(isFixed !== now) && setTimeout(() => this.setState({ isReady: now }), 1);
+		(state.isFixed !== now) && setTimeout(() => this.setState({ isReady: now }), 1);
 		// call user callbacks if `shown` state changed
-		if (isShown !== this.state.isShown) return (isShown ? onShow : onHide).call(this, this.base);
+		if (state.isShown !== this.state.isShown) return (isShown ? props.onShow : props.onHide).call(this, this.base);
 	}
 
 	render(props, state) {
