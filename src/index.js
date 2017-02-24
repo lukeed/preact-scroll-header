@@ -5,6 +5,10 @@ const doc = document;
 const body = doc.body;
 let lastScroll, firstReverse;
 
+function attach(el, cb) {
+	(el === body ? doc : el).addEventListener(EVT, cb);
+}
+
 export default class ScrollHeader extends Component {
 	constructor(props) {
 		super(props);
@@ -47,25 +51,18 @@ export default class ScrollHeader extends Component {
 	}
 
 	componentDidMount() {
-		let el = this.parent;
 		this.height = this.base.offsetHeight;
-		!el && (this.parent = el = this.base.parentNode);
-		if (!this.props.disabled) {
-			(el === body ? doc : el).addEventListener(EVT, this.onScroll);
-		}
+		!this.parent && (this.parent = this.base.parentNode);
+		!this.props.disabled && attach(this.parent, this.onScroll);
 	}
 
 	componentWillReceiveProps(props) {
 		const el = this.parent;
 		const prev = this.props.disabled;
-		// is newly disabled
-		if (!prev && props.disabled) {
-			(el === body ? doc : el).removeEventListener(EVT, this.onScroll);
-		}
 		// is newly enabled
-		if (prev && !props.disabled) {
-			(el === doc.body ? doc : el).addEventListener(EVT, this.onScroll);
-		}
+		(prev && !props.disabled) && attach(el, this.onScroll);
+		// is newly disabled
+		(!prev && props.disabled) && (el === body ? doc : el).removeEventListener(EVT, this.onScroll);
 	}
 
 	shouldComponentUpdate(props, state) {
