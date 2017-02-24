@@ -20,7 +20,6 @@ export default class ScrollHeader extends Component {
 
 		this.onScroll = () => {
 			const Y = body.scrollTop;
-			console.log('inside', Y);
 
 			if (!lastScroll) {
 				lastScroll = Y;
@@ -30,18 +29,15 @@ export default class ScrollHeader extends Component {
 				this.setState({ isFixed: true });
 				if (lastScroll <= Y) {
 					// reset, is scrolling down
+					firstReverse = 0;
 					this.setState({ isShown: false });
 				} else {
-						console.log('UP');
 					if ((firstReverse - Y) > this.buffer) {
-						console.log('REVEAL');
 						this.setState({ isShown: true });
 					}
 					firstReverse = firstReverse || Y;
 				}
 				lastScroll = Y;
-				console.log('ALSO RESET, DOWN');
-				// this.setState({ isShown: false });
 			} else {
 				firstReverse = 0;
 				this.setState({ isFixed: false, isShown: false });
@@ -52,9 +48,7 @@ export default class ScrollHeader extends Component {
 	componentDidMount() {
 		this.height = this.base.offsetHeight;
 		!this.parent && (this.parent = this.base.parentNode);
-		console.log(this.parent, this.height, this.props.disabled);
 		if (!this.props.disabled) {
-			console.log('attaching listener to', this.parent);
 			addEventListener(EVT, this.onScroll);
 			// this.parent.addEventListener(EVT, this.onScroll);
 		}
@@ -68,8 +62,12 @@ export default class ScrollHeader extends Component {
 		(prev && !disabled) && this.parent.addEventListener(EVT, this.onScroll)
 	}
 
-	shouldComponentUpdate() {
-		console.log('~~~~~~~~~~ inside scu ~~~~~~~~~~');
+	shouldComponentUpdate(props, state) {
+		const now = this.state;
+		return props.disabled !== this.props.disabled
+			|| state.isFixed !== now.isFixed
+			|| state.isReady !== now.isReady
+			|| state.isShown !== now.isShown;
 	}
 
 	componentDidUpdate({ onShow, onHide }, { isFixed, isShown }) {
