@@ -2,7 +2,9 @@
 
 > A (800b gzip) header that will show/hide while scrolling; for :atom_symbol: [Preact](https://github.com/developit/preact)
 
-#### [Demo](https://jsfiddle.net/lukeed/cyfjsk50/)
+#### [Demo (standard)](https://jsfiddle.net/lukeed/cyfjsk50/)
+
+#### [Demo (inverse)](https://jsfiddle.net/lukeed/mxrse9k4/)
 
 ## Install
 
