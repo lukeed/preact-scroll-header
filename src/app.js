@@ -1,23 +1,20 @@
 import { h, render } from 'preact';
 import ScrollHeader from './index';
 
+const DATA = []; // staic data
+for (let x=100; x--; ) DATA[x] = `Item #${x+1}`;
+
 render((
 	<div className="demo">
-    <ScrollHeader
-    	buffer={ 20 }
-    	className="demo-header"
-    	onPin={ () => console.log('PIN') }
-    	onUnpin={ () => console.log('UNPIN') }
-    	>
-      <h1>Menu</h1>
-    </ScrollHeader>
+		<ScrollHeader
+			className="demo-header"
+			onShow={ () => console.log('PIN') }
+			onHide={ () => console.log('UNPIN') }>
+			<h1>Menu</h1>
+		</ScrollHeader>
 
-    <article>
-      {
-      	Array(8).fill().map(() => (
-      		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores sed officiis ut incidunt non dolorem, nisi voluptate. Provident sed officia iste tenetur asperiores totam expedita aut. Vel minima beatae ipsa!</p>
-        ))
-      }
-    </article>
-  </div>
+		<ul>
+			{ DATA.map(e => <li>{ e }</li>) }
+		</ul>
+	</div>
 ), document.body);

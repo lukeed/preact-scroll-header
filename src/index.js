@@ -1,6 +1,7 @@
 import { h, Component } from 'preact';
 
 const EVT = 'scroll';
+const body = document.body;
 let lastScroll, firstReverse;
 
 export default class ScrollHeader extends Component {
@@ -11,31 +12,39 @@ export default class ScrollHeader extends Component {
 		this.buffer = props.buffer || 0;
 		this.parent = props.listenTo || null;
 
-		this.state = { isFixed: false };
+		this.state = {
+			isFixed: false,
+			isReady: false,
+			isShown: false
+		};
 
-		this.onScroll = e => {
-			const Y = e.target.scrollTop;
+		this.onScroll = () => {
+			const Y = body.scrollTop;
+			console.log('inside', Y);
 
 			if (!lastScroll) {
 				lastScroll = Y;
 			}
 
 			if (Y >= this.height) {
+				this.setState({ isFixed: true });
 				if (lastScroll <= Y) {
 					// reset, is scrolling down
-					this.setState({ isFixed: false });
+					this.setState({ isShown: false });
 				} else {
+						console.log('UP');
 					if ((firstReverse - Y) > this.buffer) {
-						this.setState({ isFixed: true });
+						console.log('REVEAL');
+						this.setState({ isShown: true });
 					}
 					firstReverse = firstReverse || Y;
 				}
 				lastScroll = Y;
-				// console.log('ALSO RESET, DOWN');
-				// this.setState({ isFixed: false });
+				console.log('ALSO RESET, DOWN');
+				// this.setState({ isShown: false });
 			} else {
 				firstReverse = 0;
-				this.setState({ isFixed: false });
+				this.setState({ isFixed: false, isShown: false });
 			}
 		};
 	}
@@ -43,7 +52,12 @@ export default class ScrollHeader extends Component {
 	componentDidMount() {
 		this.height = this.base.offsetHeight;
 		!this.parent && (this.parent = this.base.parentNode);
-		!this.props.disabled && this.parent.addEventListener(EVT, this.onScroll);
+		console.log(this.parent, this.height, this.props.disabled);
+		if (!this.props.disabled) {
+			console.log('attaching listener to', this.parent);
+			addEventListener(EVT, this.onScroll);
+			// this.parent.addEventListener(EVT, this.onScroll);
+		}
 	}
 
 	componentWillReceiveProps({ disabled }) {
@@ -58,15 +72,26 @@ export default class ScrollHeader extends Component {
 		console.log('~~~~~~~~~~ inside scu ~~~~~~~~~~');
 	}
 
-	componentDidUpdate({ onPin, onUnpin }, { isFixed }) {
+	componentDidUpdate({ onShow, onHide }, { isFixed, isShown }) {
 		const now = this.state.isFixed;
-		if (isFixed !== now) return (now ? onPin : onUnpin).call(this, this.base);
+		// delay `isReady` application; transition flashing
+		(isFixed !== now) && setTimeout(() => this.setState({ isReady: now }), 1);
+		// call user callbacks if `shown` state changed
+		if (isShown !== this.state.isShown) return (isShown ? onShow : onHide).call(this, this.base);
 	}
 
-	render({ id, className, children, fixClass }, { isFixed }) {
+	render(props, state) {
+		let cls = props.className;
+
+		if (!props.disabled) {
+			state.isFixed && (cls += ` ${props.fixClass || 'is--fixed'}`);
+			state.isReady && (cls += ` ${props.readyClass || 'is--ready'}`);
+			state.isShown && (cls += ` ${props.showClass || 'is--shown'}`);
+		}
+
 		return (
-			<header id={ id } className={ className }>
-				<div>{ children }</div>
+			<header id={ props.id } className={ cls }>
+				<div>{ props.children }</div>
 			</header>
 		);
 	}
