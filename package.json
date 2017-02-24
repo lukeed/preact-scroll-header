@@ -1,6 +1,6 @@
 {
   "name": "preact-scroll-header",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "module": "src/index.js",
   "main": "dist/preact-scroll-header.js",
   "repository": "lukeed/preact-scroll-header",
