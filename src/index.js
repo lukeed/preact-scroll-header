@@ -23,8 +23,8 @@ export default class ScrollHeader extends Component {
 			isShown: false
 		};
 
-		this.onScroll = () => {
-			const Y = body.scrollTop;
+		this.onScroll = e => {
+			const Y = (e.target.body || e.target).scrollTop;
 
 			if (!lastScroll) {
 				lastScroll = Y;
