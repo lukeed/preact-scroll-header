@@ -76,52 +76,62 @@ However, there are some strong guidelines which you should not neglect. Below is
 
 #### id
 Type: `String`<br>
-Default: `none`<br>
+Default: `none`
+
 The `id` attribute to pass down.
 
 #### className
 Type: `String`<br>
-Default: `none`<br>
+Default: `none`
+
 The `className` attribute to pass down. Added to the wrapper element.
 
 #### fixClass
 Type: `String`<br>
-Default: `'is--fixed'`<br>
+Default: `'is--fixed'`
+
 The `className` to add when the header is out of view. This should apply a `position:fixed` style, as well as an initial `transform` value.
 
 #### readyClass
 Type: `String`<br>
-Default: `'is--ready'`<br>
+Default: `'is--ready'`
+
 The `className` to add when the header has been "fixed". This should apply a `transition` value to your header, which should always be separated from your [`fixClass`](#fixClass).
 
 > **Note:** Applying a `transition` _before_ this class (via base style or `fixClass`) will cause the `<ScrollHeader/>` to flicker into view before hiding.
 
 #### showClass
 Type: `String`<br>
-Default: `'is--shown'`<br>
+Default: `'is--shown'`
+
 The `className` to add when the header should be revealed. This should apply your desired `transform` effect. Class is only applied when the `<ScrollHeader/>` is out of view and has been "fixed".
 
 #### buffer
 Type: `Number`<br>
-Default: `0`<br>
+Default: `0`
+
 The number of pixels to scroll before applying your [`showClass`](#showClass). By default, the `<ScrollHeader/>` will be shown immediately after user scrolls up.
 
 #### listenTo
 Type: `String`<br>
-Default: `this.base.parentNode`<br>
+Default: `this.base.parentNode`
+
 The "scroller" element that will fire `scroll` events. Works well with customized viewports, where `document.body` is not scrollable and/or controlling overflow.
 
 #### disabled
 Type: `Boolean`<br>
-Default: `false`<br>
+Default: `false`
+
 Whether or not to disable the show/hide behavior. If `true`, **will not** add `fixClass`, `readyClass`, or `showClass`.
 
 #### onShow
-Type: `Function`<br>
+Type: `Function`
+
 The callback function when the header is to be shown. Receivies the DOM element as its only argument, but is bound to the `ScrollHeader` component context.
 
 #### onHide
-Type: `Function`<br>
+Type: `Function`
+
 The callback function when the header is to be hidden. Receivies the DOM element as its only argument, but is bound to the `ScrollHeader` component context.
 
 
