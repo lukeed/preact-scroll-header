@@ -22,27 +22,57 @@ Provide a `value`; everything else is optional.
 
 ```js
 import { h } from 'preact';
-import Progress from 'preact-scroll-header';
+import ScrollHeader from 'preact-scroll-header';
 
-onChange = (ctx, val) => console.log(`${val}% complete`);
-onComplete = ctx => {ctx.base.style.opacity = 0};
-
-<Progress 
-  id="loader" className="loader"
-  value={ 16.3 } height="3px" color="#6cc644"
-  onChange={ onChange }
-  onComplete={ onComplete }
-/>
+<ScrollHeader
+  id="header" className="menu"
+  buffer={ 24 } showClass="menu-show"
+  onShow={ el => console.log('SHOWN', el) }
+  onHide={ el => console.log('HIDDEN', el) }>
+  <h1>Menu</h1>
+</ScrollHeader>
 ```
 
-## Properties
+## Styles
 
-<!--
-#### value
-Type: `Number`<br>
-Default: `0`<br>
-The current progress; between 0 and 100. Mapped to a `style:width` percentage.
--->
+This component does not include any inline styles. Instead, classnames are assigned for every state the `<ScrollHeader/>` enters. This provides greater flexibility and control of your desired effects! 
+
+However, there are some strong guidelines which you should not neglect. Below is an example for a simple slide-down effect:
+
+```css
+/* start with "shown" position */
+/* will-change, top, right, left early to avoid extra repaints */
+.header {
+  position: relative;
+  will-change: transform;
+  transform: translateY(0%);
+  right: 0;
+  left: 0;
+  top: 0;
+}
+
+/* apply fixed; set start point */
+.is--fixed {
+  position: fixed;
+  transform: translateY(-100%);
+}
+
+/* apply transition separately; no flicker */
+.is--ready {
+  transition: transform 0.2s ease-in-out;
+}
+
+/* set end point; with shadow */
+.is--shown {
+  transform: translateY(0%);
+  box-shadow: 0 3px 6px rgba(0,0,0, 0.16);
+}
+```
+
+> **Note:** Assumes that "header" was added as your base `className`. All others are defaults.
+
+
+## Properties
 
 #### id
 Type: `String`<br>
@@ -53,6 +83,47 @@ The `id` attribute to pass down.
 Type: `String`<br>
 Default: `none`<br>
 The `className` attribute to pass down. Added to the wrapper element.
+
+#### fixClass
+Type: `String`<br>
+Default: `'is--fixed'`<br>
+The `className` to add when the header is out of view. This should apply a `position:fixed` style, as well as an initial `transform` value.
+
+#### readyClass
+Type: `String`<br>
+Default: `'is--ready'`<br>
+The `className` to add when the header has been "fixed". This should apply a `transition` value to your header, which should always be separated from your [`fixClass`](#fixClass).
+
+> **Note:** Applying a `transition` _before_ this class (via base style or `fixClass`) will cause the `<ScrollHeader/>` to flicker into view before hiding.
+
+#### showClass
+Type: `String`<br>
+Default: `'is--shown'`<br>
+The `className` to add when the header should be revealed. This should apply your desired `transform` effect. Class is only applied when the `<ScrollHeader/>` is out of view and has been "fixed".
+
+#### buffer
+Type: `Number`<br>
+Default: `0`<br>
+The number of pixels to scroll before applying your [`showClass`](#showClass). By default, the `<ScrollHeader/>` will be shown immediately after user scrolls up.
+
+#### listenTo
+Type: `String`<br>
+Default: `this.base.parentNode`<br>
+The "scroller" element that will fire `scroll` events. Works well with customized viewports, where `document.body` is not scrollable and/or controlling overflow.
+
+#### disabled
+Type: `Boolean`<br>
+Default: `false`<br>
+Whether or not to disable the show/hide behavior. If `true`, **will not** add `fixClass`, `readyClass`, or `showClass`.
+
+#### onShow
+Type: `Function`<br>
+The callback function when the header is to be shown. Receivies the DOM element as its only argument, but is bound to the `ScrollHeader` component context.
+
+#### onHide
+Type: `Function`<br>
+The callback function when the header is to be hidden. Receivies the DOM element as its only argument, but is bound to the `ScrollHeader` component context.
+
 
 ## License
 
