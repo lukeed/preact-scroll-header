@@ -87,7 +87,7 @@ export default class ScrollHeader extends Component {
 	}
 
 	render(props, state) {
-		let cls = props.className;
+		let cls = props.className || '';
 
 		if (!props.disabled) {
 			state.isFixed && (cls += ` ${props.fixClass || 'is--fixed'}`);
