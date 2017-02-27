@@ -69,7 +69,7 @@ export default class ScrollHeader extends Component {
 
 	shouldComponentUpdate(props, state) {
 		const now = this.state;
-		return props.disabled !== this.props.disabled
+		return props !== this.props
 			|| state.isFixed !== now.isFixed
 			|| state.isReady !== now.isReady
 			|| state.isShown !== now.isShown;
