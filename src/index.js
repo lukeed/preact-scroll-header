@@ -1,16 +1,12 @@
 import { h, Component } from 'preact';
 
-const EVT = 'scroll';
-const doc = document;
-const body = doc.body;
-let lastScroll, firstReverse;
-
-function attach(el, cb) {
-	(el === body ? doc : el).addEventListener(EVT, cb);
-}
-
 function noop() {}
 
+function toNode(el) {
+	return el === document.body ? document : el;
+}
+
+let lastScroll, firstReverse;
 export default class ScrollHeader extends Component {
 	constructor(props) {
 		super(props);
@@ -54,17 +50,17 @@ export default class ScrollHeader extends Component {
 
 	componentDidMount() {
 		this.height = this.base.offsetHeight;
-		!this.parent && (this.parent = this.base.parentNode);
-		!this.props.disabled && attach(this.parent, this.onScroll);
+		this.parent = this.parent || this.base.parentNode;
+		this.props.disabled || toNode(this.parent).addEventListener('scroll', this.onScroll, { passive:true });
 	}
 
 	componentWillReceiveProps(props) {
 		const el = this.parent;
 		const prev = this.props.disabled;
 		// is newly enabled
-		(prev && !props.disabled) && attach(el, this.onScroll);
+		(prev && !props.disabled) && toNode(el).addEventListener('scroll', this.onScroll, { passive:true });
 		// is newly disabled
-		(!prev && props.disabled) && (el === body ? doc : el).removeEventListener(EVT, this.onScroll);
+		(!prev && props.disabled) && toNode(el).removeEventListener('scroll', this.onScroll);
 	}
 
 	shouldComponentUpdate(props, state) {
